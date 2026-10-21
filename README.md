@@ -1,2 +1,4 @@
-# Security_Fundamentals_Lab4
-This repository shows the lab 4 worked on during the Fundamentals of AI class. 
+# FDSI — Lab Reverse Engineering
+
+Laboratorio académico de ingeniería inversa sobre crackmes autorizados.
+Evidencia en `docs/evidence/reverse/`. Tag de entrega: `lab-reverse-v1`.
