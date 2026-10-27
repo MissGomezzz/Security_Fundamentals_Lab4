@@ -1,12 +1,12 @@
-## sha256sum
-61e980febe84b1003b5a3b641468e915b984f7fdd835be9828af54233f88c68c  crackme_level1
-8dc5931dfbf74d7371de9ca9ed8cc57bfe0af4521346202dcd1c701dd8b6f4e5  crackme_level2
-c8e638741272a87ee3b30fe8878898c1aa977e6a879a1ec0b271034b5bb9aed3  crackme_level2_stripped
-
 ## file
 crackme_level1:          ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=01c8816fe4b791d9ded9a73e62f8f443464716ba, for GNU/Linux 3.2.0, with debug_info, not stripped
 crackme_level2:          ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=3eb5b89d4b93c6773577b448cd1cc98400e2196b, for GNU/Linux 3.2.0, with debug_info, not stripped
 crackme_level2_stripped: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=df25a1fa020d404f3512421bfcf8c89b417e8554, for GNU/Linux 3.2.0, stripped
+
+## sha256sum
+61e980febe84b1003b5a3b641468e915b984f7fdd835be9828af54233f88c68c  crackme_level1
+8dc5931dfbf74d7371de9ca9ed8cc57bfe0af4521346202dcd1c701dd8b6f4e5  crackme_level2
+c8e638741272a87ee3b30fe8878898c1aa977e6a879a1ec0b271034b5bb9aed3  crackme_level2_stripped
 
 ## readelf -h crackme_level1
 ELF Header:
@@ -51,3 +51,19 @@ ELF Header:
   Size of section headers:           64 (bytes)
   Number of section headers:         36
   Section header string table index: 35
+
+## Análisis
+
+### Identificación de los binarios
+- Formato: ELF (Executable and Linkable Format) de 64 bits, little endian.
+- Arquitectura: x86-64 (AMD64). Tipo EXEC, sin PIE (el entry point es 0x401070, dirección fija).
+- Linking: dinámico. Usa el intérprete /lib64/ld-linux-x86-64.so.2 y funciones de libc (strcmp, printf, puts, putchar, strlen).
+- Símbolos:
+  - crackme_level1 y crackme_level2: "not stripped" y "with debug_info". Conservan nombres de funciones y símbolos, por lo que se ven main, validate_key, etc.
+  - crackme_level2_stripped: "stripped". Se eliminó la tabla de símbolos, así que los nombres de las funciones ya no existen.
+
+### ¿Por qué sirve un hash?
+SHA-256 es una huella única del contenido del archivo. Si dos personas obtienen el mismo hash,
+analizan exactamente el mismo binario byte a byte. Si cambia un solo byte (archivo corrupto,
+modificado o de otra versión), el hash es distinto. Por eso garantiza integridad y
+reproducibilidad: los resultados de un compañero se pueden comparar con los de otro.
